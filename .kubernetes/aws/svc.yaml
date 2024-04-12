@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: &app-name svc-go-ml-sagemaker
+  namespace: test-a
+  labels:
+    app: *app-name
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5008
+    targetPort: 5008
+    protocol: TCP
+    name: http
+  selector:
+    app: go-ml-sagemaker
