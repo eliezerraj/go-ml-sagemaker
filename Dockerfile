@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 WORKDIR /app/cmd
-RUN go build -o go-debit -ldflags '-linkmode external -w -extldflags "-static"'
+RUN go build -o go-ml-sagemaker -ldflags '-linkmode external -w -extldflags "-static"'
 
 FROM alpine
 
