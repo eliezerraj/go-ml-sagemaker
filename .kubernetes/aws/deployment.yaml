@@ -24,10 +24,10 @@ spec:
         fsGroup: 3000
       containers:
       - name: *app-name
-        image: 908671954593.dkr.ecr.us-east-2.amazonaws.com/go-ml-sagemakert:latest
+        image: 908671954593.dkr.ecr.us-east-2.amazonaws.com/go-ml-sagemaker:latest
         envFrom:
         - configMapRef:
-            name: go-go-ml-sagemaker
+            name: go-ml-sagemaker-cm
         resources:
            requests:
              cpu: 100m
@@ -46,7 +46,7 @@ spec:
             - ALL
         ports:
         - name: http
-          containerPort: 5002
+          containerPort: 5008
           protocol: TCP
         readinessProbe:
             httpGet:
@@ -62,7 +62,7 @@ spec:
               command:
               - /bin/sh
               - -c
-              - "ps -A | grep go-ml-sagemakert | grep -v grep"
+              - "ps -A | grep go-ml-sagemaker | grep -v grep"
             initialDelaySeconds: 5
             periodSeconds: 30
             failureThreshold: 3

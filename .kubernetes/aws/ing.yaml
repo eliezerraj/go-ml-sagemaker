@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ing-go-debit
+  name: ing-go-ml-sagemaker
   namespace: test-a
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
@@ -18,6 +18,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: svc-go-go-ml-sagemaker
+              name: svc-go-ml-sagemaker
               port:
-                number: 5002
+                number: 5008
