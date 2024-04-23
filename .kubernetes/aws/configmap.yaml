@@ -10,4 +10,4 @@ data:
   POD_NAME: "go-ml-sagemaker-eks-01"
   PORT: "5008"
   OTEL_EXPORTER_OTLP_ENDPOINT: "arch-eks-02-xray-collector.default.svc.cluster.local:4317"
-  SAGEMAKER_FRAUD_ENDPOINT: "xgboost-serverless-ep-fraud-model-v3-2024-04-07-02-38-32"
+  SAGEMAKER_FRAUD_ENDPOINT: "xgboost-serverless-ep-fraud-model-v3-2024-04-23-00-23-57"
