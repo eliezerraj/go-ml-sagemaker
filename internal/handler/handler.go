@@ -85,3 +85,31 @@ func (h *HttpWorkerAdapter) FraudPredict(rw http.ResponseWriter, req *http.Reque
 	json.NewEncoder(rw).Encode(res)
 	return
 }
+
+func (h *HttpWorkerAdapter) CustomerClassification(rw http.ResponseWriter, req *http.Request) {
+	childLogger.Debug().Msg("CustomerClassification")
+
+	ctx, hdlspan := otel.Tracer("go-ml-sagemaker").Start(req.Context(),"handler.CustomerClassification")
+	defer hdlspan.End()
+
+	customerClassification := core.CustomerClassification{}
+	err := json.NewDecoder(req.Body).Decode(&customerClassification)
+    if err != nil {
+		rw.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(rw).Encode(erro.ErrUnmarshal.Error())
+        return
+    }
+
+	res, err := h.workerService.CustomerClassification(ctx, &customerClassification)
+	if err != nil {
+		switch err {
+		default:
+			rw.WriteHeader(500)
+			json.NewEncoder(rw).Encode(err.Error())
+			return
+		}
+	}
+
+	json.NewEncoder(rw).Encode(res)
+	return
+}

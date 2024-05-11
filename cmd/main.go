@@ -50,6 +50,10 @@ func getEnv() {
 	if os.Getenv("SAGEMAKER_FRAUD_ENDPOINT") !=  "" {	
 		sageMakerEndpoint.FraudEndpoint = os.Getenv("SAGEMAKER_FRAUD_ENDPOINT")
 	}
+
+	if os.Getenv("SAGEMAKER_CUSTOMER_ENDPOINT") !=  "" {	
+		sageMakerEndpoint.CustomerEndpoint = os.Getenv("SAGEMAKER_CUSTOMER_ENDPOINT")
+	}
 }
 
 func init(){

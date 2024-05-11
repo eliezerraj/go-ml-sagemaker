@@ -111,6 +111,12 @@ func (h HttpServer) StartHttpAppServer(ctx context.Context, httpWorkerAdapter *H
 	fraudPredict.Use(MiddleWareHandlerHeader)
 	fraudPredict.Use(otelmux.Middleware("go-ml-sagemaker"))
 
+	customerClassification := myRouter.Methods(http.MethodPost, http.MethodOptions).Subrouter()
+    customerClassification.Handle("/customerClassification", 
+					http.HandlerFunc(httpWorkerAdapter.CustomerClassification),)
+	customerClassification.Use(MiddleWareHandlerHeader)
+	customerClassification.Use(otelmux.Middleware("go-ml-sagemaker"))
+
 	srv := http.Server{
 		Addr:         ":" +  strconv.Itoa(h.httpAppServer.Server.Port),      	
 		Handler:      myRouter,                	          

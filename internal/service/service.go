@@ -108,3 +108,52 @@ func (s WorkerService) FraudPredict(ctx context.Context,
 
 	return payment, nil
 }
+
+func (s WorkerService) CustomerClassification(	ctx context.Context, 
+												customerClassification *core.CustomerClassification) (interface{}, error){
+	childLogger.Debug().Msg("CustomerClassification")
+
+	childLogger.Debug().Interface("=======>customerClassification :", customerClassification).Msg("")
+
+	ctx, svcspan := otel.Tracer("go-fraud").Start(ctx,"svc.CustomerClassification")
+	defer svcspan.End()
+
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		childLogger.Error().Err(err).Msg("error LoadDefaultConfig")
+		return nil, err
+	}
+
+	client := sagemakerruntime.NewFromConfig(cfg)
+
+	payload := fmt.Sprintf("%v, %v, %v, %v",
+							customerClassification.Dim_1,
+							customerClassification.Dim_2,
+							customerClassification.Dim_3,
+							customerClassification.Dim_4)
+
+	childLogger.Debug().Interface("=======>payload :", payload).Msg("")
+
+	input := &sagemakerruntime.InvokeEndpointInput{EndpointName: &s.sageMakerEndpoint.CustomerEndpoint,
+						ContentType:  aws.String("text/csv"),
+						Body:         []byte(payload),
+					}
+
+	resp, err := client.InvokeEndpoint(ctx, input)
+	if err != nil {
+		childLogger.Error().Err(err).Msg("error InvokeEndpoint")
+		return nil, err
+	}
+
+	responseBody := string(resp.Body)
+
+	/*responseFloat, err := strconv.ParseFloat(responseBody, 64)
+	if err != nil {
+		childLogger.Error().Err(err).Msg("error ParseFloat")
+		return nil, err
+	}*/
+
+	childLogger.Debug().Interface("=======> (Cluster) :", responseBody).Msg("")
+
+	return responseBody, nil
+}
